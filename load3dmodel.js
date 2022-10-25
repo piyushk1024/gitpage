@@ -1,4 +1,4 @@
-import {loadGLTF,loadAudio} from "/libs/loader.js";
+import {loadGLTF,loadAudio} from "./static/libs/loader.js";
 //import {mockWithVideo} from '../../libs/camera-mock';
 const THREE = window.MINDAR.IMAGE.THREE;
 
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // initialize MindAR 
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
       container: document.querySelector("#AR-div"),
-      imageTargetSrc: '/assets/targets.mind',
+      imageTargetSrc: './static/assets/targets.mind',
     });
     const {renderer, scene, camera} = mindarThree;
 
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(light);
     
     // load and scale 3d model
-    const model3d = await loadGLTF('/assets/musicband-raccoon/scene.gltf');
+    const model3d = await loadGLTF('./static/assets/musicband-raccoon/scene.gltf');
     model3d.scene.scale.set(0.1,0.1,0.1);
     model3d.scene.position.set(0,-0.4,0);
 
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clock = new THREE.Clock();
 
     //for Audio
-    const audioClip = await loadAudio ('/assets/sounds/drum-beat-90-bpm-with-reverb.mp3');    
+    const audioClip = await loadAudio ('./static/assets/sounds/drum-beat-90-bpm-with-reverb.mp3');    
     const listener = new THREE.AudioListener();
     //const listener = new THREE.AudioListener();
     camera.add(listener);

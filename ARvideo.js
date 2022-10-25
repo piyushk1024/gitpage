@@ -1,5 +1,5 @@
-import {loadGLTF, loadVideo} from "/libs/loader.js";
-import { createChromaMaterial } from "/libs/chroma-video.js";
+import {loadGLTF, loadVideo} from "./static/libs/loader.js";
+import { createChromaMaterial } from "./static/libs/chroma-video.js";
 
 const THREE = window.MINDAR.IMAGE.THREE;
 
@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const start = async() => {
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
       container: document.querySelector("#AR-div"),
-      imageTargetSrc: '/assets/targets.mind',
+      imageTargetSrc: './static/assets/targets.mind',
     });
     const {renderer, scene, camera} = mindarThree;
 
-    const video = await loadVideo("/assets/videos/chromavideo.mp4");
+    const video = await loadVideo("./static/assets/videos/chromavideo.mp4");
     // video.play();
     // video.pause();
     const texture = new THREE.VideoTexture(video);

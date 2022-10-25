@@ -1,4 +1,4 @@
-import {CSS3DObject} from '/libs/three.js-r132/examples/jsm/renderers/CSS3DRenderer.js';
+import {CSS3DObject} from './static/libs/three.js-r132/examples/jsm/renderers/CSS3DRenderer.js';
 
 const THREE = window.MINDAR.IMAGE.THREE;
 
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
       container: document.querySelector("#AR-div"),
-      imageTargetSrc: '/assets/targets.mind',
+      imageTargetSrc: './static/assets/targets.mind',
     });
     const {renderer, scene, cssRenderer, cssScene,camera} = mindarThree;
 
