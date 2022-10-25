@@ -1,4 +1,4 @@
-import {loadGLTF,loadAudio} from "./loader.js";
+import {loadGLTF,loadAudio} from "./static/libs/loader.js";
 //import {mockWithVideo} from '../../libs/camera-mock';
 const THREE = window.MINDAR.IMAGE.THREE;
 
