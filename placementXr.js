@@ -24,9 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const controller = renderer.xr.getController(0);
     scene.add(controller);
 
+    const geometry = new THREE.BoxGeometry(0.06, 0.06, 0.06); 
+        
+
     controller.addEventListener('select', () => {
-        const geometry = new THREE.BoxGeometry(0.06, 0.06, 0.06); 
-        const material = new THREE.MeshBasicMaterial({color: 0xffffff * Math.random()});
+        const material = new THREE.MeshBasicMaterial({color: 0xffffff * Math.random()});        
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.applyMatrix4(controller.matrixWorld);
         mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
