@@ -1,0 +1,11 @@
+Model Information:
+* title:	TRABANT  - low poly car model
+* source:	https://sketchfab.com/3d-models/trabant-low-poly-car-model-0a79e91d3c3447e19c8c0c3339557a0b
+* author:	Jasmin Daniel (https://sketchfab.com/jasmin.daniel)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "TRABANT  - low poly car model" (https://sketchfab.com/3d-models/trabant-low-poly-car-model-0a79e91d3c3447e19c8c0c3339557a0b) by Jasmin Daniel (https://sketchfab.com/jasmin.daniel) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

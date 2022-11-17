@@ -8,7 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera();
 
-        const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 1 );
+        const AmbientLight = new THREE.AmbientLight( 0x404040,1 ); // soft white light
+        scene.add( AmbientLight );
+
+        //const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 1 );
+        const light = new THREE.DirectionalLight(0xffffff, 1);
         scene.add(light);        
 
         const reticleGeometry = new THREE.RingGeometry(0.15,0.2,32).rotateX(-Math.PI/2);
@@ -44,9 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
             //const mesh = new THREE.Mesh(geometry, material);
             if (!carPlaced) {
                 scene.add(car3d.scene);
-                //car3d.scene.position.setFromMatrixPosition(reticle.matrix);                
+                //car3d.scene.position.setFromMatrixPosition(reticle.matrix);
+
                 carPlaced = true;
-            }            
+            }
+            else {
+                //console.log(car3d.scene.material);
+                //car3d.scene.material.color.set(0xffffff * Math.random());
+                //o.material.
+            }
             car3d.scene.position.setFromMatrixPosition(reticle.matrix);
             //quaternion.setFromRotationMatrix(controller.matrixWorld);
             car3d.scene.quaternion.setFromRotationMatrix(reticle.matrixWorld);

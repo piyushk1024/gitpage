@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta name = "viewport" content = "width=device-width,initial-scale=1.0">
+        <script type = "module" src = "./fixtures.js"></script>
+        <style>
+            body {margin: 0}
+    #events {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 30vh;
+      padding: 10px;
+      width: 50vw;
+      overflow: auto;
+      background: white;
+      z-index: 1001;
+    }
+    .button {
+        background: none;
+        border: 1px solid #fff;
+        border-radius: 4px;
+        color: #fff;
+        display: flex;
+        font-size: 1em;
+        padding: 1 1;
+        position: absolute;
+        float:left;
+        text-transform: uppercase;
+        z-index: 1001;
+      }
+    #matrix {
+      margin-top: 25px;
+      margin-left:10px;
+    }
+    #xInc {
+      margin-top: 60px;
+      margin-left:10px;
+    }
+    #xDec {
+      margin-top: 60px;
+      margin-left:75px;     
+    }
+    #yInc {
+      margin-top: 95px;
+      margin-left:10px;
+    }
+    #yDec {
+      margin-top: 95px;
+      margin-left:75px;
+    }
+    #zInc {
+      margin-top: 130px;
+      margin-left:10px;
+    }
+    #zDec {
+      margin-top: 130px;
+      margin-left:75px;
+      
+    }
+    #scaleInc {
+      margin-top: 165px;
+      margin-left:10px;
+    }
+    #scaleDec {
+      margin-top: 165px;
+      margin-left:112px;
+    }
+    #toggle {
+      margin-top: 200px;
+      margin-left:10px;
+    }
+    #placeObj {
+      left: 50%;
+      bottom: 10%;
+      margin-left:-60px;
+      margin-bottom :10px;
+    }
+            /* #ar-button {position: fixed;z-index: 1001; padding: 1vh;bottom: 1vh; left: 50%; transform: translateX(-50%)}         */
+        </style>
+    </head>
+    <body>
+        <!-- <textarea id="events"></textarea> -->
+        <button class = 'button' id = 'matrix'>Print</button>        
+        <button class = 'button' id = 'xInc'>X +</button>
+        <button class = 'button' id = 'xDec'>X -</button>
+        <button class = 'button' id = 'yInc'>Y +</button>
+        <button class = 'button' id = 'yDec'>Y -</button>
+        <button class = 'button' id = 'zInc'>Z +</button>
+        <button class = 'button' id = 'zDec'>Z -</button>        
+        <button class = 'button' id = 'toggle'>Toggle Rotation</button>      
+        <button class = 'button' id = 'scaleInc'>scale +</button>
+        <button class = 'button' id = 'scaleDec'>scale -</button>
+        <button class = 'button' id = 'placeObj'>Place Fixture</button>
+        
+
+        <!-- <button id="ar-button">Start</button> -->
+        <!-- <p>"Alfa Romeo Stradale 1967" (https://skfb.ly/6xMZX) by Ipatov Kirill is licensed under Creative Commons Attribution-NonCommercial (http://creativecommons.org/licenses/by-nc/4.0/).</p>
+        <p> Press Start AR button</p> -->
+    </body>
+</html>
