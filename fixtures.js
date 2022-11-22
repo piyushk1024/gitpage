@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scene.add(reticle);
 
     
-        const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});        
+        const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true,gammaOutput : true});        
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth,window.innerHeight);
         renderer.xr.enabled = true;
@@ -50,6 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         //const fixture = await loadGLTF('./static/assets/alfa_romeo_stradale_1967/scene.gltf');
         const fixture = await loadGLTF('./static/assets/shower_high_poly/scene.gltf');
+        
+        //const fixture = await loadGLTF('./static/assets/Rotating_jet_engine/Rotating_jet_engine.gltf');
+        //const fixture = await loadGLTF('./static/assets/rover/rover.gltf');
+        //const fixture = await loadGLTF('./static/assets/fighterJet/fighterJet.gltf');
         //fixture.scene.rotateX(-Math.PI/2);
         //const fixture = await loadGLTF('./static/assets/shower_stand/scene.gltf');
         
@@ -100,9 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             else {document.querySelector("#toggle").textContent = "Toggle Rotation";}
           });
-        document.querySelector("#matrix").addEventListener("click", () => {
-            printDetails();
-          });
+        // document.querySelector("#matrix").addEventListener("click", () => {
+        //     printDetails();
+        //   });
 
         document.querySelector("#xDec").addEventListener("click", () => {
             poschange(0,-1)
