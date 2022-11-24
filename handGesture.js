@@ -1,36 +1,21 @@
-import {loadGLTF} from "./static/libs/loader.js";
+//import {loadGLTF} from "./static/libs/loader.js";
 const THREE = window.MINDAR.IMAGE.THREE;
 
 document.addEventListener('DOMContentLoaded', () => {
   const start = async() => {
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
       container: document.body,
+      uiScanning: "no",
       imageTargetSrc: './static/assets/targets.mind',
     });
+
+    // document.querySelector("#switch").addEventListener("click", () => {
+    //   mindarThree.switchCamera();
+    // });
+
     const {renderer, scene, camera} = mindarThree;
 
-    const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 1 );
-    scene.add(light);
-
-    const robot = await loadGLTF('./static/assets/robot/RobotExpressive.glb');
-    robot.scene.scale.set(0.2, 0.2, 0.2);
-    robot.scene.position.set(0, -0.2, 0);
-
-    const anchor = mindarThree.addAnchor(0);
-    anchor.group.add(robot.scene);
-
-    const mixer = new THREE.AnimationMixer(robot.scene);
-
-    const idleAction = mixer.clipAction(robot.animations[2]);
-    const jumpAction = mixer.clipAction(robot.animations[3]);
-    const dieAction = mixer.clipAction(robot.animations[1]);
-    const thumbsUpAction = mixer.clipAction(robot.animations[9]);
-    const waveAction = mixer.clipAction(robot.animations[12]);
-    thumbsUpAction.loop = THREE.LoopOnce;
-    waveAction.loop = THREE.LoopOnce;
-    jumpAction.loop = THREE.LoopOnce;
-    dieAction.loop = THREE.LoopOnce;
-
+    
     const model = await handpose.load();
 
     const waveGesture = new fp.GestureDescription('wave');
@@ -39,114 +24,80 @@ document.addEventListener('DOMContentLoaded', () => {
       waveGesture.addDirection(finger, fp.FingerDirection.VerticalUp, 1.0);
     }
 
-    const dieGesture = new fp.GestureDescription('die');
-    for(let finger of [fp.Finger.Thumb, fp.Finger.Index, fp.Finger.Middle, fp.Finger.Ring, fp.Finger.Pinky]) {
-      dieGesture.addCurl(finger, fp.FingerCurl.NoCurl, 1.0);
-      dieGesture.addDirection(finger, fp.FingerDirection.HorizontalLeft, 1.0);
-      dieGesture.addDirection(finger, fp.FingerDirection.HorizontalRight, 1.0);
-    }
-    const jumpGesture = new fp.GestureDescription('jump');
-    jumpGesture.addCurl(fp.Finger.Index, fp.FingerCurl.NoCurl, 1.0);
-    jumpGesture.addDirection(fp.Finger.Index, fp.FingerDirection.VerticalUp, 1.0);
-    jumpGesture.addDirection(fp.Finger.Thumb, fp.FingerDirection.DiagonalUpRight, 1.0);
-    jumpGesture.addDirection(fp.Finger.Thumb, fp.FingerDirection.DiagonalUpLeft, 1.0);
-    for(let finger of [fp.Finger.Thumb, fp.Finger.Middle, fp.Finger.Ring, fp.Finger.Pinky]) {
-      jumpGesture.addCurl(finger, fp.FingerCurl.FullCurl, 1.0);
-      jumpGesture.addDirection(finger, fp.FingerDirection.VerticalUp, 1.0);
-      jumpGesture.addDirection(finger, fp.FingerDirection.VerticalDown, 1.0);
-    }
-
-    // const oneUp = new fp.GestureDescription('up1');
-    // oneUp.addCurl(fp.Finger.Index,fp.FingerCurl.NoCurl,1.0);
-    // oneUp.addDirection(fp.Finger.Index,fp.FingerDirection.VerticalUp,1.0);
-    // for(let finger of [fp.Finger.Thumb, fp.Finger.Middle, fp.Finger.Ring, fp.Finger.Pinky]) {
-    //   jumpGesture.addCurl(finger, fp.FingerCurl.FullCurl, 1.0);
-    //   jumpGesture.addDirection(finger, fp.FingerDirection.VerticalUp, 1.0);
-    //   jumpGesture.addDirection(finger, fp.FingerDirection.VerticalDown, 1.0);
-    // }
-
-
-    // const twoUp = new fp.GestureDescription('up2');
-    // twoUp.addCurl(fp.Finger.Index,fp.FingerCurl.NoCurl,1.0);
-    // twoUp.addCurl(fp.Finger.Pinky,fp.FingerCurl.NoCurl,1.0);
-    // twoUp.addDirection(fp.Finger.Index,fp.FingerDirection.VerticalUp,1.0);
-    // twoUp.addDirection(fp.Finger.Pinky,fp.FingerDirection.VerticalUp,1.0);
-    // for(let finger of [fp.Finger.Thumb, fp.Finger.Middle, fp.Finger.Ring]) {
-    //   jumpGesture.addCurl(finger, fp.FingerCurl.FullCurl, 1.0);
-    //   jumpGesture.addDirection(finger, fp.FingerDirection.VerticalUp, 1.0);
-    //   jumpGesture.addDirection(finger, fp.FingerDirection.VerticalDown, 1.0);
-    // }
-
     const GE = new fp.GestureEstimator([
       fp.Gestures.ThumbsUpGesture,
       fp.Gestures.VictoryGesture,
       waveGesture,
-      jumpGesture,
-      dieGesture
       // oneUp,
       // twoUp
     ]);
+    function responser(response) {
+      //document.querySelector('#optionA').textContent = "1";
+      //document.querySelector('#optionB').textContent = "2";
+      document.querySelector('#answer').textContent = "";      
+      document.querySelector('#optionA').style.backgroundColor  = 'transparent';
+      document.querySelector('#optionB').style.backgroundColor  = 'transparent';
 
+      if (response === 1) {
+        document.querySelector('#answer').textContent = "Selected 1";
+        document.querySelector('#optionA').style.backgroundColor  = 'lightseagreen';   
+      }
+      else if (response === 2) {
+        document.querySelector('#answer').textContent = "Selected 2";
+        document.querySelector('#optionB').style.backgroundColor  = 'lightseagreen';   
+      }
+      else if (response === 3) {
+        document.querySelector('#answer').textContent = "No Response";
+      }
+
+    };
     // start
-    const clock = new THREE.Clock();
+    //const clock = new THREE.Clock();
     await mindarThree.start();
     renderer.setAnimationLoop(() => {
-      const delta = clock.getDelta();
-      mixer.update(delta);
       renderer.render(scene, camera);
     });
 
-    let activeAction = idleAction;
-    activeAction.play();
-    const fadeToAction = (action, duration) => {
-      if (activeAction === action) return;
-      activeAction = action;
-      activeAction.reset().fadeIn(duration).play();
-    }
-    mixer.addEventListener('finished', () => {
-      fadeToAction(idleAction, 0.2);
-    });
 
     const video = mindarThree.video;
     let skipCount = 0;
     const detect = async () => {
-      if (activeAction !== idleAction) {
-	window.requestAnimationFrame(detect);
-	return;
-      }
+      // if (activeAction !== idleAction) {
+	    //   window.requestAnimationFrame(detect);
+	    // return;
+      // }
       if (skipCount < 10) {
-	skipCount += 1;
-	window.requestAnimationFrame(detect);
-	return;
+	      skipCount += 1;
+	      window.requestAnimationFrame(detect);
+	    return;
       }
       skipCount = 0;
 
       const predictions = await model.estimateHands(video);
       if (predictions.length > 0) {
-	const estimatedGestures = GE.estimate(predictions[0].landmarks, 7.5);
-	if (estimatedGestures.gestures.length > 0) {
-	  const best = estimatedGestures.gestures.sort((g1, g2) => g2.confidence - g1.confidence)[0];
-	  if (best.name === 'thumbs_up') {
-	    fadeToAction(thumbsUpAction, 0.5);
-      document.querySelector("#optionA").textContent = "Selected A";
-      console.log("thumbs up");
-	  } else if (best.name === 'wave') {
-	    fadeToAction(waveAction, 0.5);
-	  } else if (best.name === 'jump') {
-	    fadeToAction(jumpAction, 0.5);
-	  } else if (best.name === 'die') {
-	    fadeToAction(dieAction, 0.5);
-	  } else if (best.name === 'victory') {
-	    //fadeToAction(dieAction, 0.5);
-      console.log("victory gesture");
-      document.querySelector("#optionB").textContent = "Selected B";
-	  }
+	      const estimatedGestures = GE.estimate(predictions[0].landmarks, 7.5);
+        console.log(estimatedGestures);
+	      if (estimatedGestures.gestures.length > 0) {
+	        const best = estimatedGestures.gestures.sort((g1, g2) => g2.confidence - g1.confidence)[0];
+          if (best.name === 'thumbs_up') {            
+            //document.querySelector("#optionA").textContent = "Selected A";
+            responser(1);
+            console.log("thumbs up");
+          } else if (best.name === 'wave') {            
+            responser(3);
+          } else if (best.name === 'victory') {
+            //fadeToAction(dieAction, 0.5);
+            console.log("victory gesture");
+            //document.querySelector("#optionB").textContent = "Selected B";
+            responser(2);
+          }
+    //else {responser(0)}
     
 
 	}
   else {
-    document.querySelector("#optionA").textContent = "A";
-    document.querySelector("#optionB").textContent = "B";
+    //document.querySelector("#optionA").textContent = "A";
+    //document.querySelector("#optionB").textContent = "B";
   }
       }
       window.requestAnimationFrame(detect);

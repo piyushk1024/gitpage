@@ -1,9 +1,15 @@
+<!DOCTYPE html>
 <html>
+  
+<meta charset="UTF-8">
+
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./static/libs/mindar/mindar-image-three.prod.js"></script>
+    <!-- <script src="./static/libs/mindar/mindar-face-three.prod.js"></script> -->
     <script>
       window.tf = window.MINDAR.IMAGE.tf;
+      //window.tf = window.MINDAR.FACE.tf;
     </script>
     <script src="https://unpkg.com/@tensorflow-models/handpose@0.0.6/dist/handpose.js"></script>
     <script src="./static/libs/handpose/fingerpose.js"></script>
@@ -22,6 +28,7 @@
         float:left;
         text-transform: uppercase;
         z-index: 1001;
+        
       }
       #optionA{
         margin-top: 25px;
@@ -32,11 +39,39 @@
         margin-top:25px;
         right:10%
         /* margin-right:-50px; */
+      }      
+      #instructions1{
+        bottom:10%;
+        margin-bottom:30px;
+        left:50%;
+        margin-left:-350px;
+        font-size: 1.5em
+        /* margin-right:-50px; */
       }
+      #instructions2{
+        bottom:5%;
+        left:50%;
+        margin-left:-250px;
+        font-size: 1.5em
+        /* margin-right:-50px; */
+      }
+      #answer{
+        bottom:20%;
+        left:50%;
+        margin-left:-80px;
+        font-size: 2em
+        /* margin-right:-50px; */
+      }
+
+
     </style>
   </head>
   <body>
-    <p class = 'options' id = 'optionA'>A</p>
-    <p class = 'options' id = 'optionB'>B</p>
+    <p class = 'options' id = 'optionA'> 👍 1</p>
+    <p class = 'options' id = 'optionB'> ✌️ 2</p>
+    <p class = 'options' id = 'instructions1'>Thumbs up(👍) for option 1, Victory sign (✌️) for option 2,</p>
+    <p class = 'options' id = 'instructions2'>raised hand(&#9995) for clearing options</p>
+    <p class = 'options' id = 'answer'>No Response</p>
+    <!-- <button class = 'options' id="switch">Switch Camera</button> -->
   </body>
 </html>
