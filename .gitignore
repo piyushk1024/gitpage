@@ -2,3 +2,6 @@ server.py
 static/cert.pem
 bootstrapexample.html
 main.js
+borrowed.html
+borrowed.js
+threeGame.js.bak
