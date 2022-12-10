@@ -1,0 +1,54 @@
+<html>
+	<head>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<script src="./static/libs/mindar/mindar-image-three.prod.js"></script>
+		<script type = "module" src="./threeGameAR.js"></script>
+		<meta charset="utf-8">
+		<title>three.js AR Game</title>
+		<style>
+						.button {
+				background: none;
+				border: 1px solid #fff;
+				border-radius: 4px;
+				color: #fff;
+				display: flex;
+				font-size: 1em;
+				padding: 1 1;
+				position: absolute;
+				float:left;
+				text-transform: uppercase;
+				z-index: 1001;
+      		}
+			#undo {
+			margin-top: 250px;
+			margin-left:10px;
+			}
+			#dropButton {
+			margin-top: 350px;
+			margin-left:10px;
+			}
+			#controlButton {
+				left: 50%;
+				bottom: 20%;
+				margin-left:-60px;
+				margin-bottom :10px;
+				font-size: 1em;
+			}
+			#status {
+				left: 50%;
+				bottom: 30%;
+				margin-left:-60px;
+				margin-bottom :10px;
+				font-size: 1.5em;
+			}
+
+		</style>		
+	</head>
+	<body>
+		<button class = 'button' id = 'undo'>Undo</button>
+		<button class = 'button' id = 'controlButton'>Restart Game</button>
+		<button class = 'button' id = 'dropButton'>Drop Tile</button>
+		<p class = 'button' id = 'status'></p>
+	</body>
+</html>

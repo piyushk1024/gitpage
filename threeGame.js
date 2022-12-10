@@ -12,7 +12,7 @@ let theta = 0;
 
 const tileColor = 'DarkSlateGray';
 const slotColor = 'Silver';
-var testWord = "TAX";
+var testWord = "MATH";
 
 var numLetters;
 
