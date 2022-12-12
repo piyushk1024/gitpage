@@ -117,6 +117,7 @@ function tileClick(tileIndex) {
 	console.log("Tile picked",tileIndex,testWord[winningOrder[tileIndex]])
 	inHand = true;
 	document.getElementById('status').textContent = "Tile picked : " + testWord[winningOrder[tileInHand]];
+	document.getElementById("dropButton").style.visibility = 'visible';
 }
 
 function slotClick(slotIndex) {
@@ -133,6 +134,8 @@ function slotClick(slotIndex) {
 
 		moveset.push(tileInHand);
 		document.getElementById('undo').disabled = false;
+		document.getElementById("undo").style.visibility = 'visible';
+		document.getElementById("dropButton").style.visibility = 'hidden';
 
 		if (moveset.length === numLetters) {
 			checkwin();
@@ -192,6 +195,7 @@ function checkwin() {
 		console.log("Won");
 		document.getElementById('status').textContent = "Correct!!";
 		document.getElementById('undo').disabled = true;
+		document.getElementById("undo").style.visibility = 'hidden';
 	}
 	else {
 		console.log("wrong");
@@ -205,6 +209,11 @@ function makeVisible(){
 		tileArray[i].visible = true;
 		slotArray[i].visible = true;
 	}
+	
+	document.getElementById("controlButton").style.visibility = 'visible';
+	
+	document.getElementById("status").style.visibility = 'visible';
+	document.getElementById("status").textContent = "Game Started";
 }
 
 
@@ -228,6 +237,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	shuffle();
 	document.getElementById("undo").disabled = true;
+	document.getElementById("undo").style.visibility = 'hidden';//
+	document.getElementById("controlButton").style.visibility = 'hidden';
+	document.getElementById("dropButton").style.visibility = 'hidden';
+	document.getElementById("status").style.visibility = 'hidden';
+
+
 	document.querySelector("#undo").addEventListener("click", () => {
 		undoMove();
 		})
