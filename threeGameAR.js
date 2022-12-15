@@ -1,26 +1,19 @@
-//import {loadGLTF,loadAudio} from "./static/libs/loader.js";
-//import {mockWithVideo} from '../../libs/camera-mock';
-//import {WEBGL} from "./static/libs/three.js-r132/examples/jsm/WebGL.js";
-//import {CSS2DRenderer,CSS2DObject} from "./static/libs/three.js-r132/examples/jsm/renderers/CSS2DRenderer.js";
 import {CSS3DRenderer,CSS3DObject} from "./static/libs/three.js-r132/examples/jsm/renderers/CSS3DRenderer.js";
-//import Stats from './static/libs/three.js-r132/examples/jsm/libs/stats.module.js';
 
 const THREE = window.MINDAR.IMAGE.THREE;
-//const mindarThree;
-// monitorEvents(window);
-
-// console.log(mindarThree);
-
 
 const tileColor = 'DarkSlateGray';
 const slotColor = 'Silver';
-var testWord = "COHORT";
-//const wordList = ["ABC","DEF"]
+//var testWord = "COHORT";
+const wordList = ["COHORT","GROWTH","RANKING"]
+var progress = wordList.length;
 //var progress = wordList.length
-//var testWord = wordList[0];
+var testWord
+var changeWord = true;
 
-var numLetters;
-const timeLimit = 15;
+var numLetters,offset;
+
+const timeLimit = 60;
 var timeRemaining = timeLimit;
 
 const tileArray = [];
@@ -135,7 +128,7 @@ function slotClick(slotIndex) {
 		tileArray[tileInHand].userData['parentSlot'] = slotIndex;
 
 		moveset.push(tileInHand);
-		movecount += 1;
+		// movecount += 1;
 		document.getElementById('undo').disabled = false;
 		document.getElementById("undo").style.visibility = 'visible';
 		document.getElementById("dropButton").style.visibility = 'hidden';
@@ -165,6 +158,7 @@ function undoMove() {
 		slotArray[placedSlot].userData['childTile'] = -1;
 		slotArray[placedSlot].userData['placed'] = false;
 		tileArray[movedTile].visible = true;
+		movecount += 1;
 	}
 }
 
@@ -176,6 +170,7 @@ function dropTile(){
 	}
 }
 
+
 function checkwin() {
 	let won = true;
 	for (let i = 0;i<numLetters;i++) {
@@ -185,40 +180,42 @@ function checkwin() {
 		}
 	}	
 	if (won) {
-		document.getElementById('status').textContent = "Correct!!";
-		document.getElementById('undo').disabled = true;
-		document.getElementById("undo").style.visibility = 'hidden';
-		console.log(movecount,numLetters);
-		gameStatus = 3;
-		//create scorecard
-		document.getElementById("scoreCard").style.display = 'block';
-		document.getElementById('scoreCard').append(document.createElement('p').innerHTML = 'Your Score');
-		document.getElementById("scoreCard").appendChild(document.createElement('br'));
-		const p = [];
-		p.push(document.createElement('p'));
-		p[p.length-1].innerHTML = ("Undo Penalties : " + (movecount-numLetters)*5);		
-		document.getElementById("scoreCard").appendChild(p[p.length-1]);
+		// gameManager();
+		changeWord = true;
+		// document.getElementById('status').textContent = "Correct!!";
+		// document.getElementById('undo').disabled = true;
+		// document.getElementById("undo").style.visibility = 'hidden';
+		// console.log(movecount,numLetters);
+		// gameStatus = 3;
+		// //create scorecard
+		// document.getElementById("scoreCard").style.display = 'block';
+		// document.getElementById('scoreCard').append(document.createElement('p').innerHTML = 'Your Score');
+		// document.getElementById("scoreCard").appendChild(document.createElement('br'));
+		// const p = [];
+		// p.push(document.createElement('p'));
+		// p[p.length-1].innerHTML = ("Undo Penalties : " + (movecount-numLetters)*5);		
+		// document.getElementById("scoreCard").appendChild(p[p.length-1]);
 		
-		p.push(document.createElement('p'));
-		p[p.length-1].innerHTML = ("Score : " + (100-(movecount-numLetters)*5));		
-		document.getElementById("scoreCard").appendChild(p[p.length-1]);
+		// p.push(document.createElement('p'));
+		// p[p.length-1].innerHTML = ("Score : " + (100-(movecount-numLetters)*5));		
+		// document.getElementById("scoreCard").appendChild(p[p.length-1]);
 
-		p.push(document.createElement('p'));
-		p[p.length-1].innerHTML = ("Time Bonus : " + timeRemaining*10);		
-		document.getElementById("scoreCard").appendChild(p[p.length-1]);
+		// p.push(document.createElement('p'));
+		// p[p.length-1].innerHTML = ("Time Bonus : " + timeRemaining*10);		
+		// document.getElementById("scoreCard").appendChild(p[p.length-1]);
 
-		p.push(document.createElement('p'));
-		p[p.length-1].innerHTML = ("Final Score : "+ (100-(movecount-numLetters)*5+timeRemaining*10));		
-		document.getElementById("scoreCard").appendChild(p[p.length-1]);		
-		document.getElementById('scoreCard').append(document.createElement('p').innerHTML = 'Refresh Browser window to play again');
-		document.getElementById("controlButton").style.visibility = 'hidden';
+		// p.push(document.createElement('p'));
+		// p[p.length-1].innerHTML = ("Final Score : "+ (100-(movecount-numLetters)*5+timeRemaining*10));		
+		// document.getElementById("scoreCard").appendChild(p[p.length-1]);		
+		// document.getElementById('scoreCard').append(document.createElement('p').innerHTML = 'Refresh Browser window to play again');
+		// document.getElementById("controlButton").style.visibility = 'hidden';
 
 
 
-		console.log("Undo Penalty : " + (movecount-numLetters)*5,
-					"Score : " + (100-(movecount-numLetters)*5),
-					"Time Bonus : " + timeRemaining*10,
-					"Final Score : "+ (100-(movecount-numLetters)*5+timeRemaining*10));
+		// console.log("Undo Penalty : " + (movecount-numLetters)*5,
+		// 			"Score : " + (100-(movecount-numLetters)*5),
+		// 			"Time Bonus : " + timeRemaining*10,
+		// 			"Final Score : "+ (100-(movecount-numLetters)*5+timeRemaining*10));
 	}
 	else {
 		document.getElementById('status').textContent = "Not quite there";
@@ -246,7 +243,7 @@ function timeKeeper(){
 
 		document.getElementById("timeP").innerText = 'Time : ' + timeRemaining;			
 	}
-	if (gameStatus === 3 || timeRemaining<=0) {
+	if (gameStatus === 3 || timeRemaining <=0) {
 		console.log(Math.round(((timeLimit-timer.getElapsedTime())*10))/10,timeRemaining,timeLimit-timer.getElapsedTime());
 		gameStatus +=1;
 		timer.stop();
@@ -254,15 +251,13 @@ function timeKeeper(){
 	}
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
 	const start = async() => {	
 		const mindarThree = new window.MINDAR.IMAGE.MindARThree({
 			container: document.body,//document.body
 			imageTargetSrc: './static/assets/targets.mind',
-			});
-		
-	
-
+			});		
 
 	document.getElementById("controlButton").addEventListener("click", () => {
 		console.log("clicked control",gameStatus)
@@ -279,9 +274,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			gameStatus = 1;
 		}
 		else if (gameStatus ===2) {
-			while (moveset.length>0) {
-				undoMove();
-			}
+			progress = wordList.length;
+			timeRemaining = timeLimit;
+			gameManager();
+			// while (moveset.length>0) {
+			// 	undoMove();
+			// }
 			movecount = 0;
 			document.getElementById('status').textContent = "Game Restarted";
 
@@ -292,47 +290,109 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const {renderer, cssRenderer, scene, cssScene, camera} = mindarThree;
 
-	numLetters = testWord.length
+	
 	const clock = new THREE.Clock();
-	var offset = 0.5*(1 - (numLetters%2));
-
-	shuffle();
+	
 
 	const anchor = mindarThree.addAnchor(0);
 	const cssAnchor = mindarThree.addCSSAnchor(0);
+	function gameManager() {
+		
+		if (progress != 0) {
+			if (gameStatus == 2) {
+				for (let i = 0; i < numLetters; i++) {
+					cssAnchor.group.remove(tileArray[i]);
+					cssAnchor.group.remove(slotArray[i]);
+					// tileArray[i].dispose();
+					// slotArray[i].dispose();					
+				}
+				winningOrder.length = 0;
+				moveset.length = 0;
 
-	for (let i = 0; i < numLetters; i++) {
-		tileArray[i] = tileCreator(i);	
-		
-		orderIdDict[i] = tileArray[i].id;
-		idsOrderDict[tileArray[i].id] = i;
-		tileIdsArr[i] = tileArray[i].id;
+				tileArray.length = 0;
+				slotArray.length = 0;
+				tilePos.length = 0;
+				slotPos.length = 0;
 
-		tilePos[i] = 150*((i-(numLetters/2)) + offset);
-		tileArray[i].position.set(tilePos[i],0,0);
+			}
+			
+			testWord = wordList[wordList.length - progress];
+			numLetters = testWord.length
+			offset = 0.5*(1 - (numLetters%2));
+			console.log(progress,testWord,numLetters);
+			
+			
 
-		cssAnchor.group.add(tileArray[i])
+			shuffle();
+
+			
+			
+			// makeVisible();
+			// changeWord = true;
+
+			for (let i = 0; i < numLetters; i++) {
+				tileArray[i] = tileCreator(i);					
 		
-		slotArray[i] = slotCreator(i);	
+				tilePos[i] = 150*((i-(numLetters/2)) + offset);
+				tileArray[i].position.set(tilePos[i],0,0);
 		
-		orderIdDictSlot[i] = slotArray[i].id;
-		idsOrderDictSlot[slotArray[i].id] = i;
-		slotIdsArr[i] = slotArray[i].id;
-		
-		
-		slotPos[i] = 175*((i-(numLetters/2)) + offset);
-		slotArray[i].position.set(slotPos[i],300,0);
-		cssAnchor.group.add(slotArray[i]);	
-		
-	};
+				cssAnchor.group.add(tileArray[i])
+				
+				slotArray[i] = slotCreator(i);	
+				
+				slotPos[i] = 175*((i-(numLetters/2)) + offset);
+				slotArray[i].position.set(slotPos[i],300,0);
+				cssAnchor.group.add(slotArray[i]);	
+				
+			};
+			console.log(tileArray,slotArray);
+
+			document.getElementById("status").innerHTML = ("Word " + (wordList.length-progress+1) +"/"+wordList.length); 
+
+			progress--;
+			
+		}
+		else {
+			document.getElementById('status').textContent = "Correct!!";
+			document.getElementById('undo').disabled = true;
+			document.getElementById("undo").style.visibility = 'hidden';
+			console.log(movecount,numLetters);
+			gameStatus = 3;
+			//create scorecard
+			document.getElementById("scoreCard").style.display = 'block';
+			document.getElementById('scoreCard').append(document.createElement('p').innerHTML = 'Your Score');
+			document.getElementById("scoreCard").appendChild(document.createElement('br'));
+			const p = [];
+			p.push(document.createElement('p'));
+			p[p.length-1].innerHTML = ("Undo Penalties : " + (movecount)*5);		
+			document.getElementById("scoreCard").appendChild(p[p.length-1]);
+			
+			p.push(document.createElement('p'));
+			p[p.length-1].innerHTML = ("Score : " + (100-(movecount)*5));		
+			document.getElementById("scoreCard").appendChild(p[p.length-1]);
+
+			p.push(document.createElement('p'));
+			p[p.length-1].innerHTML = ("Time Bonus : " + timeRemaining*10);		
+			document.getElementById("scoreCard").appendChild(p[p.length-1]);
+
+			p.push(document.createElement('p'));
+			p[p.length-1].innerHTML = ("Final Score : "+ (100-(movecount)*5+timeRemaining*10));		
+			document.getElementById("scoreCard").appendChild(p[p.length-1]);		
+			document.getElementById('scoreCard').append(document.createElement('p').innerHTML = 'Refresh Browser window to play again');
+			document.getElementById("controlButton").style.visibility = 'hidden';
+		}
+		changeWord = false;
+	}
+
+	// gameManager();
+
+	
 
 	anchor.onTargetFound = () => {
 		detected = true;
+		if (gameStatus === 1){
 
-		for (let i = 0; i <numLetters; i++) {
-			tileArray[i].visible = true;
-			slotArray[i].visible = true;
-		}
+		gameManager();
 		
 		document.getElementById("controlButton").style.visibility = 'visible';
 		
@@ -344,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById("dropButton").innerHTML = 'Drop Tile';
 		gameStatus = 2;
 		timer.start();
-		document.getElementById('timeP').style.visibility = 'visible';
+		document.getElementById('timeP').style.visibility = 'visible';}
 		//textObj.visible = true;
 	}
   
@@ -362,6 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		cssRenderer.render(cssScene, camera);
 		if (gameStatus ===2 | gameStatus ===3){
 			timeKeeper();
+			if (changeWord) {
+				gameManager();
+			}
 		}
 			
 		// console.log(timer.getElapsedTime());
@@ -370,6 +433,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	start();
 	// pause();
 });
+// function makeVisible() {
+// 	for (let i = 0; i <numLetters; i++) {
+// 		tileArray[i].visible = true;
+// 		slotArray[i].visible = true;
+// 	}	
+// }
+
 
 // start();
 
