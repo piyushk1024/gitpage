@@ -7,38 +7,54 @@
 		<meta charset="utf-8">
 		<title>three.js AR Game</title>
 		<style>
+				body {
+				/* remove margins and scroll bars */
+					
+					text-align: center;					
+				}
+
 						.button {
 				background: white;
 				border: 1px solid #000;
 				border-radius: 4px;
 				color: #000;
-				display: flex;
+				/* display: flex; */
 				font-size: 1em;
-				padding: 1 1;
+				/* padding: 1 1; */
 				position: absolute;
 				float:left;
 				text-transform: uppercase;
 				z-index: 1001;
       		}
-			#undo {
-			/* margin-top: 250px; */
+			#undo {			
 			bottom:15%;
-			left:10%;
-			margin-left:10px;
+			left:20%;
+			width:100px;
+			margin-left:-50px;
 			margin-bottom :10px;
 			}
 			#dropButton {
 			bottom:15%;
-			left:90%;
-			/* margin-right:10px; */
+			left:80%;
+			width:100px;
+			margin-left:-50px;
 			margin-bottom :10px;
 			}
 			#controlButton {
 				left: 50%;
 				bottom: 15%;
-				margin-left:-60px;
+				margin-left:-75px;								
 				margin-bottom :10px;
+				width:150px;
 				font-size: 1em;
+			}
+			#showInfo {
+				left: 50%;
+				bottom: 10%;
+				margin-left:-75px;								
+				margin-bottom :10px;
+				width:150px;
+				
 			}
 			#status {
 				left: 50%;
@@ -47,13 +63,63 @@
 				margin-bottom :10px;
 				font-size: 1.5em;
 			}
+			#splash {
+				left:12.5% ;
+				bottom:50%;
+				width: 75%;
+				/* height:300px; */
+				/* text-align: center; */
+				/* margin-left:-250px; */
+			}
+			#scoreCard {
+				left:12.5% ;
+				bottom:50%;
+				width: 75%;
+				/* height:300px; */
+				/* text-align: center; */
+				/* margin-left:-250px; */
+			}
+			#instructions {
+				font-size: 8;
+				left:10%;
+				width:80%;			
+				/* height:300px; */
+				/* text-align: center; */
+				/* margin-left:-250px; */
+			}
+			#timeP {
+				border:none;
+				background-color: transparent;
+				color:#fff;
+			}
 
 		</style>		
 	</head>
 	<body>
 		<button class = 'button' id = 'undo'>Undo</button>
-		<button class = 'button' id = 'controlButton'>Restart Game</button>
+		<button class = 'button' id = 'controlButton'>Start Game</button>
+		<button class = 'button' id = 'showInfo'>Instructions</button>
 		<button class = 'button' id = 'dropButton'>Drop Tile</button>
+		<div id = 'splash' class = 'button'>
+			<p>Welcome to</p>
+			<h1>Word Jumble</h1>
+			<h3>AR Edition</h3>
+			<div id = 'instructions' class = 'button'>
+				<p><a href = "www.example.com">Get the marker</a></p>
+				<p>Tap on "Start Game"</p>
+				<p>The test word is presented in jumble form in green tiles</p>
+				<p>Tap on a letter to pick it</p>
+				<p>Place the letter in the correct white slot</p>
+	
+				<p>If you picked the wrong letter, pick another or use "Drop Tile" button</p>
+				<p>You can undo your placements with the 'Undo' button</p>
+			</div>
+		</div>
+		<div id = 'scoreCard' class = 'button'>			
+		</div>
+		</div>
+		<p class = 'button', id = 'timeP'>Time : 5</p>
+		
 		<p class = 'button' id = 'status'></p>
 	</body>
 </html>

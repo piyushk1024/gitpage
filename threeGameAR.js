@@ -1,24 +1,27 @@
-import {loadGLTF,loadAudio} from "./static/libs/loader.js";
+//import {loadGLTF,loadAudio} from "./static/libs/loader.js";
 //import {mockWithVideo} from '../../libs/camera-mock';
 //import {WEBGL} from "./static/libs/three.js-r132/examples/jsm/WebGL.js";
 //import {CSS2DRenderer,CSS2DObject} from "./static/libs/three.js-r132/examples/jsm/renderers/CSS2DRenderer.js";
 import {CSS3DRenderer,CSS3DObject} from "./static/libs/three.js-r132/examples/jsm/renderers/CSS3DRenderer.js";
-import Stats from './static/libs/three.js-r132/examples/jsm/libs/stats.module.js';
+//import Stats from './static/libs/three.js-r132/examples/jsm/libs/stats.module.js';
 
 const THREE = window.MINDAR.IMAGE.THREE;
+//const mindarThree;
+// monitorEvents(window);
 
-let camera, scene, raycaster, renderer,cssRenderer, stats,labelRenderer;
-let root;
+// console.log(mindarThree);
 
-let INTERSECTED;
-let theta = 0;
 
 const tileColor = 'DarkSlateGray';
 const slotColor = 'Silver';
-//var testWord = "COHORT";
 var testWord = "COHORT";
+//const wordList = ["ABC","DEF"]
+//var progress = wordList.length
+//var testWord = wordList[0];
 
 var numLetters;
+const timeLimit = 15;
+var timeRemaining = timeLimit;
 
 const tileArray = [];
 const slotArray = [];
@@ -41,11 +44,18 @@ var tileInHand = -1;
 const moveset = [];
 const winningOrder = [];
 
-const pointer = new THREE.Vector2();
-
-
-var clicked = false;
+var movecount = 0;
+var gameStatus = 0; //0 -not started 1-loaded 2 - in progress 3-game finished
 var detected = false; //to chech when object is on screen
+const timer = new THREE.Clock({autoStart:false});
+
+document.getElementById("dropButton").style.visibility = 'hidden';
+document.getElementById("undo").style.visibility = 'hidden';
+document.getElementById("timeP").style.visibility = 'hidden';
+document.getElementById("timeP").innerText = 'Time : ' + timeLimit;
+document.getElementById("instructions").style.display = 'none';
+document.getElementById("scoreCard").style.display = 'none';
+
 
 function tileCreator(tileIndex) {
 
@@ -67,6 +77,7 @@ function tileCreator(tileIndex) {
 	tile.userData = {'canPick':true,'picked':false,'parentSlot':-1}; //type 0 - tile
 	return tile; 
 }
+
 function slotCreator(tileIndex) {
 	const textElement = document.createElement("div");
     textElement.style.fontSize = "120px";
@@ -81,13 +92,8 @@ function slotCreator(tileIndex) {
 	textElement.addEventListener('pointerdown', () => {slotClick(textElement.name)});
 	
 	const slot = new CSS3DObject(textElement);
-	slot.userData = {'canPick':false,'placed':false,'childTile':-1};
-	//console.log(slot.element);
+	slot.userData = {'canPick':false,'placed':false,'childTile':-1};	
 	return slot; 
-}
-
-function labelMaker(letter) {
-
 }
 
 function shuffle() {	
@@ -113,18 +119,14 @@ function tileClick(tileIndex) {
 	tileArray[tileIndex].userData['picked'] = true;
 
 
-	tileInHand = tileIndex;
-	console.log("Tile picked",tileIndex,testWord[winningOrder[tileIndex]])
+	tileInHand = tileIndex;	
 	inHand = true;
 	document.getElementById('status').textContent = "Tile picked : " + testWord[winningOrder[tileInHand]];
 	document.getElementById("dropButton").style.visibility = 'visible';
 }
 
-function slotClick(slotIndex) {
-	//console.log(inHand,slotIndex,testWord[winningOrder[tileInHand]],slotArray[slotIndex].getChildByName(slotIndex))
+function slotClick(slotIndex) {	
 	if (inHand && !slotArray[slotIndex].userData['placed']) {
-		// console.log(slotArray[slotIndex]);
-		// console.log(slotArray[slotIndex].element);
 
 		slotArray[slotIndex].element.innerHTML = testWord[winningOrder[tileInHand]];
 		slotArray[slotIndex].userData['placed'] = true;
@@ -133,6 +135,7 @@ function slotClick(slotIndex) {
 		tileArray[tileInHand].userData['parentSlot'] = slotIndex;
 
 		moveset.push(tileInHand);
+		movecount += 1;
 		document.getElementById('undo').disabled = false;
 		document.getElementById("undo").style.visibility = 'visible';
 		document.getElementById("dropButton").style.visibility = 'hidden';
@@ -140,36 +143,28 @@ function slotClick(slotIndex) {
 		if (moveset.length === numLetters) {
 			checkwin();
 		}
-
-		console.log(moveset);
 		tileInHand = -1;
 		inHand = false;
 	}
 
 }
+
 function undoMove() {
 	if (moveset.length === 0) {
-		//console.log("No move to Undo");
-		document.getElementById("status").textContent = "No move to Undo"; 
+		document.getElementById("status").textContent = "No moves to Undo"; 
 		document.getElementById("undo").disabled = true; 
+		document.getElementById("undo").style.visibility = 'hidden'; 
 	}
 	else {
-		var movedTile = moveset.pop();//moveset[moveset.length-1];
+		var movedTile = moveset.pop();
 		var placedSlot = tileArray[movedTile].userData['parentSlot'];
 		tileArray[movedTile].userData['parentSlot'] = -1;
 
-		// while (slotArray[placedSlot].children.length){
-		// 	slotArray[placedSlot].remove(slotArray[placedSlot].children[0]);
-		// }
 		slotArray[placedSlot].element.innerHTML = "_";
 
 		slotArray[placedSlot].userData['childTile'] = -1;
 		slotArray[placedSlot].userData['placed'] = false;
 		tileArray[movedTile].visible = true;
-
-		//tileArray[movedTile].position.set(tilePos[movedTile],0,0);
-		//scene.add(tileArray[movedTile]);
-		//droptile(movedTile);
 	}
 }
 
@@ -184,79 +179,124 @@ function dropTile(){
 function checkwin() {
 	let won = true;
 	for (let i = 0;i<numLetters;i++) {
-		console.log(testWord[winningOrder[slotArray[i].userData['childTile']]],testWord[i])
 		if (testWord[winningOrder[slotArray[i].userData['childTile']]] != testWord[i]) {
 			won = false;
 			break;
 		}
-	}
-	console.log(won);
+	}	
 	if (won) {
-		console.log("Won");
 		document.getElementById('status').textContent = "Correct!!";
 		document.getElementById('undo').disabled = true;
 		document.getElementById("undo").style.visibility = 'hidden';
+		console.log(movecount,numLetters);
+		gameStatus = 3;
+		//create scorecard
+		document.getElementById("scoreCard").style.display = 'block';
+		document.getElementById('scoreCard').append(document.createElement('p').innerHTML = 'Your Score');
+		document.getElementById("scoreCard").appendChild(document.createElement('br'));
+		const p = [];
+		p.push(document.createElement('p'));
+		p[p.length-1].innerHTML = ("Undo Penalties : " + (movecount-numLetters)*5);		
+		document.getElementById("scoreCard").appendChild(p[p.length-1]);
+		
+		p.push(document.createElement('p'));
+		p[p.length-1].innerHTML = ("Score : " + (100-(movecount-numLetters)*5));		
+		document.getElementById("scoreCard").appendChild(p[p.length-1]);
+
+		p.push(document.createElement('p'));
+		p[p.length-1].innerHTML = ("Time Bonus : " + timeRemaining*10);		
+		document.getElementById("scoreCard").appendChild(p[p.length-1]);
+
+		p.push(document.createElement('p'));
+		p[p.length-1].innerHTML = ("Final Score : "+ (100-(movecount-numLetters)*5+timeRemaining*10));		
+		document.getElementById("scoreCard").appendChild(p[p.length-1]);		
+		document.getElementById('scoreCard').append(document.createElement('p').innerHTML = 'Refresh Browser window to play again');
+		document.getElementById("controlButton").style.visibility = 'hidden';
+
+
+
+		console.log("Undo Penalty : " + (movecount-numLetters)*5,
+					"Score : " + (100-(movecount-numLetters)*5),
+					"Time Bonus : " + timeRemaining*10,
+					"Final Score : "+ (100-(movecount-numLetters)*5+timeRemaining*10));
 	}
 	else {
-		console.log("wrong");
 		document.getElementById('status').textContent = "Not quite there";
 	}
 }
 
+document.getElementById("undo").addEventListener("click", () => {
+	undoMove();
+})
 
-function makeVisible(){
-	for (let i = 0; i <numLetters; i++) {
-		tileArray[i].visible = true;
-		slotArray[i].visible = true;
+document.getElementById("dropButton").addEventListener("click", () => {
+	dropTile();
+	document.getElementById('status').textContent = "Tile Dropped";
+})
+
+document.getElementById("showInfo").addEventListener("click", () => {
+	console.log('show')
+	document.getElementById('instructions').style.display = 'block';
+})
+
+function timeKeeper(){
+	
+	if ((timer.getElapsedTime() - (timeLimit-timeRemaining))> 0.1){			
+		timeRemaining = Math.round((timeRemaining-0.1)*10)/10;
+
+		document.getElementById("timeP").innerText = 'Time : ' + timeRemaining;			
 	}
-	
-	document.getElementById("controlButton").style.visibility = 'visible';
-	
-	document.getElementById("status").style.visibility = 'visible';
-	document.getElementById("status").textContent = "Game Started";
+	if (gameStatus === 3 || timeRemaining<=0) {
+		console.log(Math.round(((timeLimit-timer.getElapsedTime())*10))/10,timeRemaining,timeLimit-timer.getElapsedTime());
+		gameStatus +=1;
+		timer.stop();
+		return;
+	}
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
-	const start = async() => {
+	const start = async() => {	
+		const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+			container: document.body,//document.body
+			imageTargetSrc: './static/assets/targets.mind',
+			});
+		
 	
-	  // initialize MindAR 
-	  const mindarThree = new window.MINDAR.IMAGE.MindARThree({
-		container: document.body,//document.body
-		imageTargetSrc: './static/assets/targets.mind',
-	  });
-	  const {renderer, cssRenderer, scene, cssScene, camera} = mindarThree;
-  
-	  //create light
-  
-	// const light = new THREE.HemisphereLight(0xffffff,0xbbbbff,1);
-	// scene.add(light);
+
+
+	document.getElementById("controlButton").addEventListener("click", () => {
+		console.log("clicked control",gameStatus)
+		if (gameStatus == 0) {
+			document.getElementById("splash").style.display = 'none';
+			document.getElementById("instructions").style.display = 'none';
+			document.getElementById("controlButton").style.visibility = 'hidden';
+			document.getElementById("controlButton").textContent = 'Restart Game'
+			document.getElementById("status").textContent = 'Looking for Marker'
+			document.getElementById("showInfo").style.visibility = 'hidden'
+
+			// start()
+			mindarThree.start();
+			gameStatus = 1;
+		}
+		else if (gameStatus ===2) {
+			while (moveset.length>0) {
+				undoMove();
+			}
+			movecount = 0;
+			document.getElementById('status').textContent = "Game Restarted";
+
+			
+		}
+		
+	});
+
+	const {renderer, cssRenderer, scene, cssScene, camera} = mindarThree;
+
 	numLetters = testWord.length
 	const clock = new THREE.Clock();
 	var offset = 0.5*(1 - (numLetters%2));
 
 	shuffle();
-	document.getElementById("undo").disabled = true;
-	document.getElementById("undo").style.visibility = 'hidden';//
-	document.getElementById("controlButton").style.visibility = 'hidden';
-	document.getElementById("dropButton").style.visibility = 'hidden';
-	document.getElementById("status").style.visibility = 'hidden';
-
-
-	document.querySelector("#undo").addEventListener("click", () => {
-		undoMove();
-		})
-	document.querySelector("#controlButton").addEventListener("click", () => {
-		while (moveset.length>0) {
-			undoMove();
-		}
-		document.getElementById('status').textContent = "Game Restarted";
-	})
-	document.querySelector("#dropButton").addEventListener("click", () => {
-		dropTile();
-		document.getElementById('status').textContent = "Tile Dropped";
-	})
-
 
 	const anchor = mindarThree.addAnchor(0);
 	const cssAnchor = mindarThree.addCSSAnchor(0);
@@ -285,48 +325,52 @@ document.addEventListener('DOMContentLoaded', () => {
 		cssAnchor.group.add(slotArray[i]);	
 		
 	};
-	  anchor.onTargetFound = () => {
+
+	anchor.onTargetFound = () => {
 		detected = true;
-		makeVisible(true);
+
+		for (let i = 0; i <numLetters; i++) {
+			tileArray[i].visible = true;
+			slotArray[i].visible = true;
+		}
+		
+		document.getElementById("controlButton").style.visibility = 'visible';
+		
+		document.getElementById("status").style.visibility = 'visible';
+		document.getElementById("status").textContent = "Game Started";
+		
+		document.getElementById("status").textContent = 'Game Started'
+		document.getElementById("controlButton").style.hidden = 'visible';
+		document.getElementById("dropButton").innerHTML = 'Drop Tile';
+		gameStatus = 2;
+		timer.start();
+		document.getElementById('timeP').style.visibility = 'visible';
 		//textObj.visible = true;
-	  }
+	}
   
-	  anchor.onTargetLost = () => {
+	anchor.onTargetLost = () => {
 		detected = false;
-	  }
+	}
 	  
   
 	  //set up raycasting
-	  
-	  //console.log(clicked)    
-	  //document.querySelector("#AR-div").children[1].children[0].addEventListener('click',(e) => {
-	  document.body.addEventListener('click',(e) => {
-		const mouseX = (e.clientX / window.innerWidth)*2 -1;
-		const mouseY = -((e.clientY/window.innerHeight)*2 -1);
-		const mouse = new THREE.Vector2(mouseX, mouseY);
-		const raycaster = new THREE.Raycaster();
-		raycaster.setFromCamera(mouse,camera);
-		const intersects = raycaster.intersectObjects(scene.children, true);
-  
-		//console.log(e,intersects,e.target.getAttribute('id'),e.target);
-		
-		if (intersects.length > 0 && detected) {
-		  //console.log("detected and clicked")
-		  let o = intersects[0].object;
-		  if (o.userData['canPick'] && !inHand) {
-			tileInHand = orderIdDict[o.id];
-			o.visible = false;			
-		  }
-	  }});
-	  // create anchor
-  
-	  // start AR
-	  await mindarThree.start();
+
+	//await mindarThree.start();
+
 	  renderer.setAnimationLoop(() => {
 		renderer.render(scene, camera);
 		cssRenderer.render(cssScene, camera);
+		if (gameStatus ===2 | gameStatus ===3){
+			timeKeeper();
+		}
+			
+		// console.log(timer.getElapsedTime());
 	  });
 	}
 	start();
-  });
+	// pause();
+});
+
+// start();
+
   
