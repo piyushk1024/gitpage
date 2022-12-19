@@ -8,12 +8,12 @@ const slotColor = 'Silver';
 const wordList = ["COHORT","GROWTH","RANKING"]
 var progress = wordList.length;
 //var progress = wordList.length
-var testWord
+var testWord //currentword
 var changeWord = true;
 
 var numLetters,offset;
 
-const timeLimit = 60;
+const timeLimit = 45;
 var timeRemaining = timeLimit;
 
 const tileArray = [];
@@ -89,7 +89,7 @@ function slotCreator(tileIndex) {
 	return slot; 
 }
 
-function shuffle() {	
+function shuffle() {	//Fisher Yates
 	for (let i = 0;i < numLetters;i++) {
 		winningOrder.push(i);
 		labelArray[i] = '';
@@ -238,16 +238,19 @@ document.getElementById("showInfo").addEventListener("click", () => {
 
 function timeKeeper(){
 	
-	if ((timer.getElapsedTime() - (timeLimit-timeRemaining))> 0.1){			
-		timeRemaining = Math.round((timeRemaining-0.1)*10)/10;
-
-		document.getElementById("timeP").innerText = 'Time : ' + timeRemaining;			
-	}
+	
 	if (gameStatus === 3 || timeRemaining <=0) {
 		console.log(Math.round(((timeLimit-timer.getElapsedTime())*10))/10,timeRemaining,timeLimit-timer.getElapsedTime());
-		gameStatus +=1;
+		//gameStatus +=1;
 		timer.stop();
 		return;
+	}
+	else {
+		if ((timer.getElapsedTime() - (timeLimit-timeRemaining))> 0.1){			
+			timeRemaining = Math.round((timeRemaining-0.1)*10)/10;
+	
+			document.getElementById("timeP").innerText = 'Time : ' + timeRemaining;			
+		}
 	}
 }
 
